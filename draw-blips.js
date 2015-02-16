@@ -15,8 +15,9 @@ if (!header || !coords) {
     process.exit();
 }
 
-var HEIGHT = header.height * 10, 
-    WIDTH = header.width * 10,
+var UNIT_SIZE = 20,
+    HEIGHT = header.height * UNIT_SIZE, 
+    WIDTH = header.width * UNIT_SIZE,
     BGCOLOR = header.bgcolor ? header.bgcolor : "#000000",
     MAX_DIST = findMaxOfProp(data.data,"dist"),
     MAX_LIGHT = findMaxOfProp(data.data,"light"),
@@ -72,7 +73,6 @@ function getColor(light) {
         shade = Math.floor((relativeLight * 255) / relativeMax),
         compToHex = function(comp) {
             var hex = comp.toString(16);
-            console.log(comp,hex);
             return hex.length == 1 ? "0" + hex : hex;
         };
 
@@ -82,8 +82,7 @@ function getColor(light) {
 function drawData (light, dist, x, y) {
 
     var STROKE_WIDTH = 1, 
-        TOTAL_SIDE = 10,
-        size = Math.floor((MAX_DIST - dist) / (MAX_DIST / TOTAL_SIDE)),
+        size = Math.floor((MAX_DIST - dist) / (MAX_DIST / UNIT_SIZE)),
         gap = (TOTAL_SIDE - size) / 2;
 
     var x0 = x + gap + (size / 2),
