@@ -30,8 +30,8 @@ for (var i = 0, len = coords.length; i < len; i += 1) {
 
         var light = point.light,
              dist = point.dist,
-                x = point.x * 10,
-                y = point.y * 10;
+                x = point.x * UNIT_SIZE,
+                y = point.y * UNIT_SIZE;
         drawData(light, dist, x, y);
 
     })(coords[i]);
@@ -81,9 +81,9 @@ function getColor(light) {
 
 function drawData (light, dist, x, y) {
 
-    var STROKE_WIDTH = 1, 
+    var STROKE_WIDTH = 2, 
         size = Math.floor((MAX_DIST - dist) / (MAX_DIST / UNIT_SIZE)),
-        gap = (TOTAL_SIDE - size) / 2;
+        gap = (UNIT_SIZE - size) / 2;
 
     var x0 = x + gap + (size / 2),
         y0 = y + gap + (size / 2),
