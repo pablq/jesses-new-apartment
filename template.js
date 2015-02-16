@@ -1,7 +1,8 @@
-var INFILE = process.argv[2];
+var INFILE = process.argv[2],
+    OUTFILE = process.argv[3];
 
-if (!INFILE) {
-    console.log("Please provide an input file");
+if (!INFILE || !OUTFILE) {
+    console.log("Please provide an input file and an output file.");
     process.exit();
 }
 
@@ -16,8 +17,10 @@ if (!header || !coords) {
 
 var HEIGHT = header.height * 10, 
     WIDTH = header.width * 10,
-    BGCOLOR = header.bgcolor ? header.bgcolor : "#ffffff",
-    MAX_DIST = findMaxDist(data.data),
+    BGCOLOR = header.bgcolor ? header.bgcolor : "#000000",
+    MAX_DIST = findMaxOfProp(data.data,"dist"),
+    MAX_LIGHT = findMaxOfProp(data.data,"light"),
+    MIN_LIGHT = findMinOfProp(data.data, "light"),
     gm = require("gm"),
     image = gm(WIDTH, HEIGHT, BGCOLOR);
 
@@ -28,12 +31,12 @@ for (var i = 0, len = coords.length; i < len; i += 1) {
              dist = point.dist,
                 x = point.x * 10,
                 y = point.y * 10;
-        drawPoint(light, dist, x, y);
+        drawData(light, dist, x, y);
 
     })(coords[i]);
 }
 
-image.write("test.png", function(error) {
+image.write(OUTFILE+".png", function(error) {
   if (error) {
     console.log("FUCKING DRAW ERROR", error);
     process.exit();
@@ -42,36 +45,54 @@ image.write("test.png", function(error) {
   }
 });
 
-function findMaxDist(data) {
-    var max = data[0].dist;
-    for (var i = 0, len = data.length; i < len; i += 1) {
-        if (data[i].dist > max) {
-            max = data[i].dist;
+function findMaxOfProp(array, prop) {
+    var max = array[0][prop];
+    for (var i = 0, len = array.length; i < len; i += 1) {
+        if (array[i][prop] > max) {
+            max = array[i][prop];
         }
     }
     return max;
 }
 
-function drawPoint (light, dist, x, y) {
+function findMinOfProp(array, prop) {
+    var min = array[0][prop];
+    for (var i = 0, len = array.length; i < len; i += 1) {
+        if (array[i][prop] < min) {
+            min = array[i][prop];
+        }
+    }
+    return min;
+}
+
+function getColor(light) {
+
+    var relativeMax = MAX_LIGHT - MIN_LIGHT,
+        relativeLight = light - MIN_LIGHT,
+        shade = Math.floor((relativeLight * 255) / relativeMax),
+        compToHex = function(comp) {
+            var hex = comp.toString(16);
+            console.log(comp,hex);
+            return hex.length == 1 ? "0" + hex : hex;
+        };
+
+    return "#" + compToHex(shade) + "" + compToHex(shade) + "" + compToHex(shade);
+} 
+
+function drawData (light, dist, x, y) {
 
     var STROKE_WIDTH = 1, 
         TOTAL_SIDE = 10,
         size = Math.floor((MAX_DIST - dist) / (MAX_DIST / TOTAL_SIDE)),
         gap = (TOTAL_SIDE - size) / 2;
-    // (TOTAL_SIDE - size) + (size / 2)
-/*    var x0 = x + gap + (size / 2),
+
+    var x0 = x + gap + (size / 2),
         y0 = y + gap + (size / 2),
-        x1 = x + gap + size,
-        y1 = y + gap + size;
+        x1 = x + gap + size - STROKE_WIDTH,
+        y1 = y + gap + size - STROKE_WIDTH;
 
-    console.log("x : " + x + ", y: " + y + ", dist : " + dist + ", size: " + size);
-    image.drawCircle(x0,y0,x1,y1) */
-
-    var x0 = x + gap,
-        y0 = y + gap,
-        x1 = x + gap + size,
-        y1 = y + gap + size;
-
-    console.log("(x0, y0, x1, y1) -> ("+x0+","+y0+","+x1+","+y1+")");
-    image.drawRectangle(x0,y0,x1,y1);
+    var color = getColor(light);
+    image.fill(color)
+         .stroke(color)
+         .drawCircle(x0,y0,x1,y1)
 }
