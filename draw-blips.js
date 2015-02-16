@@ -25,6 +25,10 @@ var UNIT_SIZE = 20,
     gm = require("gm"),
     image = gm(WIDTH, HEIGHT, BGCOLOR);
 
+coords.sort(function(a,b){
+    return parseInt(a.dist) - parseInt(b.dist);
+});
+
 for (var i = 0, len = coords.length; i < len; i += 1) {
     (function(point) {
 
