@@ -20,6 +20,7 @@ var UNIT_SIZE = 20,
     WIDTH = header.width * UNIT_SIZE,
     BGCOLOR = header.bgcolor ? header.bgcolor : "#000000",
     MAX_DIST = findMaxOfProp(data.data,"dist"),
+    MIN_DIST = findMinOfProp(data.data,"dist"),
     MAX_LIGHT = findMaxOfProp(data.data,"light"),
     MIN_LIGHT = findMinOfProp(data.data, "light"),
     gm = require("gm"),
@@ -86,8 +87,12 @@ function getColor(light) {
 function drawData (light, dist, x, y) {
 
     var STROKE_WIDTH = 2, 
+        relativeMax = MAX_DIST - MIN_DIST,
+        relativeDist = dist - MIN_DIST,
         size = Math.floor((MAX_DIST - dist) / (MAX_DIST / UNIT_SIZE)),
         gap = (UNIT_SIZE - size) / 2;
+
+    console.log(size);
 
     var x0 = x + gap + (size / 2),
         y0 = y + gap + (size / 2),
