@@ -89,10 +89,8 @@ function drawData (light, dist, x, y) {
     var STROKE_WIDTH = 2, 
         relativeMax = MAX_DIST - MIN_DIST,
         relativeDist = dist - MIN_DIST,
-        size = Math.floor((MAX_DIST - dist) / (MAX_DIST / UNIT_SIZE)),
+        size = Math.floor((relativeMax - relativeDist) / (relativeMax / UNIT_SIZE)),
         gap = (UNIT_SIZE - size) / 2;
-
-    console.log(size);
 
     var x0 = x + gap + (size / 2),
         y0 = y + gap + (size / 2),
