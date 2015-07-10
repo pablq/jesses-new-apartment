@@ -1,10 +1,9 @@
 "use strict";
 
-var INFILE = process.argv[2],
-    OUTFILE = process.argv[3];
+var INFILE = process.argv[2];
 
-if (!INFILE || !OUTFILE) {
-    console.log("Please provide an input file and an output file.");
+if (!INFILE) {
+    console.log("Please provide an .JSON input file.");
     process.exit();
 }
 
@@ -13,20 +12,24 @@ var data = require("./" + INFILE),
     coords = data.data;
 
 if (!header || !coords) {
-    console.log("Input file must have a 'header' field, and a 'coords' field");
+    console.log("Input data must have a 'header' field, and a 'coords' field");
     process.exit();
 }
 
 function findMaxOfProp(array, prop) {
-    return array.reduce(function (prev, current) {
-        return prev[prop] >= current[prop] ? prev[prop] : current[prop];
-    });
+    return array.reduce(function (prev, curr) {
+        var val0 = prev,
+            val1 = parseInt(curr[prop]);
+        return val0 > val1 ? val0 : val1;
+    }, -Infinity);
 }
 
 function findMinOfProp(array, prop) {
-    return array.reduce(function (prev, current) {
-        return prev[prop] <= current[prop] ? prev[prop] : current[prop];
-    });
+    return array.reduce(function (prev, curr) {
+        var val0 = prev,
+            val1 = parseInt(curr[prop]);
+        return val0 > val1 ? val1 : val0;
+    }, Infinity);
 }
 
 var UNIT_SIZE = 20,
@@ -49,12 +52,15 @@ coords.map(function (point) {
         dist = point.dist,
         x = point.x * UNIT_SIZE,
         y = point.y * UNIT_SIZE;
+
     drawData(light, dist, x, y);
 });
 
-image.write(OUTFILE + ".png", function (error) {
+var OUTFILE = INFILE.split("/")[1].replace(".json", ".png");
+
+image.write("./output/" + OUTFILE, function (error) {
     if (error) {
-        console.log("DRAW ERROR!", error);
+        console.log(error);
         process.exit();
     } else {
         console.log("IT WORKED!");
@@ -69,12 +75,10 @@ function getColor(light) {
             var hex = comp.toString(16);
             return hex.length === 1 ? "0" + hex : hex;
         };
-
     return "#" + compToHex(shade) + "" + compToHex(shade) + "" + compToHex(shade);
 }
 
 function drawData(light, dist, x, y) {
-
     var STROKE_WIDTH = 2,
         relativeMax = MAX_DIST - MIN_DIST,
         relativeDist = dist - MIN_DIST,
@@ -87,6 +91,7 @@ function drawData(light, dist, x, y) {
         y1 = y + gap + size - STROKE_WIDTH;
 
     var color = getColor(light);
+
     image.fill(color)
         .stroke(color)
         .drawCircle(x0, y0, x1, y1);
