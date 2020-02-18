@@ -1,28 +1,25 @@
-Jesse's new apartment
-===
+# Jesse's new apartment
 
-this is an art program and is intended to be 'off-the-cuff' and specific. 
+This program is an art sketch.
 
-this repository exists as a record and for redundancy.
+It generates images from data I collected with my friend Jesse at his new apartment.
 
-the data from this program came from an experiment with arduino.
+We collected the data with light sensor, ultrasonic distance sensor, 2 servos, and an Arduino device.
 
-a friend and i set up an arduino controlled rig with 2 servos, a light sensor, and an ultrasonic distance sensor.
+We connected the sensors to the Arduino device, and rigged up the servos to control where the sensors pointed.
 
-we had the arduino scan a grid of arbitrary space and record the light and distance data at each (x,y) coordinate.
+The goal was to scan parts of Jesse's new aparment in a grid pattern, and collect measurements of the light and distance at each x, y coordinate.
 
-the data was sent to my computer via Serial port 9600 and recorded in a (semi) csv form with Processing.
+The data was sent to my computer via Serial port 9600 and recorded in a (semi) csv form with Processing.
 
-that data was then trimmed and converted to json using mrdataconverter.com and a bit of manual adjusting.
+That data was then trimmed and converted to json using mrdataconverter.com and a bit of manual adjusting.
 
-the image output isn't the most accurate rendition of the space scanned by the arduino but i think it looks pretty nice.
+Later, I wrote the draw-blips program to visualize the data we collected.
 
-this is just a sketch program.
+It can be run using node.js:
+`node draw-blips.js data/<inputfile>.json <outputfile>.png`
 
-if you are interested in seeing the output this program can be run using node.js:
-node draw-blips.js data/inputfile.json outputfile.png
-
-note: this program depends on GraphicsMagick tool, and gm node module.
+Note: This program depends on GraphicsMagick tool, and gm node module.
 
 Examples:
 ![anotherdata](./output/anotherdata.png)
