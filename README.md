@@ -1,3 +1,6 @@
+Jesse's new apartment
+===
+
 this is an art program and is intended to be 'off-the-cuff' and specific. 
 
 this repository exists as a record and for redundancy.
@@ -17,4 +20,17 @@ the image output isn't the most accurate rendition of the space scanned by the a
 this is just a sketch program.
 
 if you are interested in seeing the output this program can be run using node.js:
-node draw-blips.js data/<data-file>.json <outputfilename>
+node draw-blips.js data/inputfile.json outputfile.png
+
+note: this program depends on GraphicsMagick tool, and gm node module.
+
+Examples:
+![anotherdata](./output/anotherdata.png)
+![asdf](./output/asdf.png)
+![final](./output/final.png)
+![full](./output/full.png)
+![hand](./output/hand.png)
+![hello](./output/hello.png)
+![moredata](./output/moredata.png)
+
+
